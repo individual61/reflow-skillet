@@ -1,106 +1,25 @@
-#include <Adafruit_GFX.h>
-#include <Adafruit_MAX31856.h>
-#include <Adafruit_SSD1306.h>
-#include <Arduino.h>
+#include "parameters.h"
 
-///////////////////
-// Buttons
+///////////////////////////// GLOBALS
 
-#define STARTSTOP_BTN 4
-#define
+// Display globals
+Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 
-///////////////////
-// Pro Trinket SPI Connections (common to both devices)
-
-// MOSI/SDI 11
-// MISO/SDO 12
-// SCK 13
-
-/////////////////// thermocouple (CS = 10)
-// Use software SPI: CS, DI, DO, CLK
-#define MAX31856_CS 10
-#define MAX31856_MOSI 11
-#define MAX31856_MISO 12
-#define MAX31856_CLK 13
-
+// Thermocouple globals
 Adafruit_MAX31856 max =
     Adafruit_MAX31856(MAX31856_CS, MAX31856_MOSI, MAX31856_MISO, MAX31856_CLK);
 // use hardware SPI, just pass in the CS pin
 // Adafruit_MAX31856 max = Adafruit_MAX31856(10);
-
-/////////////////// OLED
-// If using software SPI (the default case):
-#define OLED_MOSI 11
-#define OLED_CLK 13
-#define OLED_DC 8
-#define OLED_CS 6
-#define OLED_RESET 5
-Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-
-// Start OLED preamble
-#define LOGO16_GLCD_HEIGHT 16
-#define LOGO16_GLCD_WIDTH 16
-
-#if (SSD1306_LCDHEIGHT != 64)
-#error("Height incorrect, please fix Adafruit_SSD1306.h!");
-#endif
-// end OLED preamble
-
-// OLED function definitions
-
 float g_coldtemp = 0.0;
 float g_thtemp = 0.0;
 float g_tset = 0.0;
-
 uint8_t g_fault = 0;
 
-enum State_enum { running, idle, fault };
+// Button globalS
+//
 State_enum theState = idle;
 
-void update_temps() {
-  Serial.println("In update temps");
-  g_fault = max.readFault();
-  if (!g_fault) {
-    g_coldtemp = max.readCJTemperature();
-    g_thtemp = max.readThermocoupleTemperature();
-    /*    Serial.print("Cold: ");
-        Serial.print(g_coldtemp);
-        Serial.print("\tTC: ");
-        Serial.println(g_thtemp);
-        */
-  } else {
-    theState = fault;
-    Serial.println("In update temps, setting fault");
-  }
-}
-
-void update_display() {
-  Serial.println("In update display");
-  display.clearDisplay();
-  display.setCursor(0, 0);
-  display.print("Tact: ");
-  display.println(g_thtemp);
-  display.print("Tset: ");
-  if (g_tset == 0.0) {
-    display.println("--");
-  } else {
-    display.println(g_tset);
-  }
-  display.setCursor(0, 55);
-  display.print("Tcj:  ");
-  display.print(g_coldtemp);
-  display.setCursor(80, 0);
-  if (theState == idle)
-    display.print("Idle");
-  else if (theState == running)
-    display.print("Running");
-  else if (theState == fault)
-    display.print("Fault");
-
-  display.display();
-}
-
-// end OLED function definitions
+///////////////////////////// END GLOBALS
 
 void setup() {
   theState = idle;
@@ -183,6 +102,8 @@ void loop() {
     if (!g_fault) {
       theState = idle;
     }
+    break;
+  case pause:
     break;
   }
 
