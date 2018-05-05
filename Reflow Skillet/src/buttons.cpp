@@ -10,9 +10,24 @@ unsigned long timeNowButton2 = 0;
 unsigned long lastTimePressedButton1 = 0;
 unsigned long lastTimePressedButton2 = 0;
 
-void startStopBtnPressAction(void) {}
+void startStopBtnPressAction(void) {
+  if (theState == idle) {
+    // do transition to running here ()
+    theState = running;
+  }
+  if (theState == running) {
+    // do transition to idle here ()
+    theState = idle;
+  }
+}
 
-void pauseBtnPressAction(void) { theState = idle; }
+void pauseBtnPressAction(void) {
+  if (theState == pause) {
+    theState = running; // remember to reset integrator timer
+  } else if (theState == running) {
+    theState = pause;
+  }
+}
 
 void checkStartStopButton(void) {
   bool buttonState = digitalRead(STARTSTOP_BTN);
