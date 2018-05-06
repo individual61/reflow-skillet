@@ -1,27 +1,29 @@
 #include "parameters.h"
 
 void update_display() {
-  Serial.println("In update display");
+  //  Serial.println("In update display");
   display.clearDisplay();
   display.setCursor(0, 0);
-  display.print("Tact: ");
+  display.print(F("Tact: "));
   display.println(g_thtemp);
-  display.print("Tset: ");
+  display.print(F("Tset: "));
   if (g_tset == 0.0) {
-    display.println("--");
+    display.println(F("--"));
   } else {
     display.println(g_tset);
   }
-  display.setCursor(0, 55);
-  display.print("Tcj:  ");
-  display.print(g_coldtemp);
+  //  display.setCursor(0, 55);
+  //  display.print(F("Tcj:  "));
+  //  display.print(g_coldtemp);
   display.setCursor(80, 0);
   if (theState == idle)
-    display.print("Idle");
+    display.print(F("Idle"));
   else if (theState == running)
-    display.print("Running");
+    display.print(F("Running"));
   else if (theState == fault)
-    display.print("Fault");
+    display.print(F("Fault"));
+  else if (theState == pause)
+    display.print(F("Paused"));
 
   display.display();
 }

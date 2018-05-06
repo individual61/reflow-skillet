@@ -8,7 +8,12 @@
 #include <Adafruit_MAX31856.h>
 #include <Adafruit_SSD1306.h>
 #include <Arduino.h>
+#include <avr/pgmspace.h>
 
+///////////////////
+// SSR/LED output
+#define OUTPUT_PIN 9
+#define LED_PIN 0
 ///////////////////
 // Buttons
 
@@ -30,6 +35,8 @@
 #define MAX31856_MISO 12
 #define MAX31856_CLK 13
 
+#define TEMP_POLL_INTERVAL_MS 150
+
 /////
 
 /////////////////// OLED
@@ -44,9 +51,9 @@
 #define LOGO16_GLCD_HEIGHT 16
 #define LOGO16_GLCD_WIDTH 16
 
-#if (SSD1306_LCDHEIGHT != 64)
-#error("Height incorrect, please fix Adafruit_SSD1306.h!");
-#endif
+//#if (SSD1306_LCDHEIGHT != 64)
+//#error("Height incorrect, please fix Adafruit_SSD1306.h!");
+//#endif
 // end OLED preamble
 
 //////////////////////// GLOBALS
@@ -61,8 +68,10 @@ extern float g_coldtemp;
 extern float g_thtemp;
 extern float g_tset;
 extern uint8_t g_fault;
+extern uint16_t g_previous_temp_read_time;
 
 // Button globalS
 enum State_enum { running, idle, fault, pause };
 extern State_enum theState;
+
 #endif

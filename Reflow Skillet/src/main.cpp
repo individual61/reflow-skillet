@@ -1,6 +1,8 @@
 #include "parameters.h"
 
-///////////////////////////// GLOBALS
+// Modified Adafruit thermocouple library per
+// https://forums.adafruit.com/viewtopic.php?f=19&t=108896
+//////////////////////// GLOBALS
 
 // Display globals
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
@@ -13,31 +15,32 @@ Adafruit_MAX31856 max =
 float g_coldtemp = 0.0;
 float g_thtemp = 0.0;
 float g_tset = 0.0;
+
 uint8_t g_fault = 0;
 
 // Button globalS
 //
+
+// State Machine globals
 State_enum theState = idle;
 
 ///////////////////////////// END GLOBALS
 
 void setup() {
+  Serial.begin(115200);
+
   theState = idle;
   g_fault = 0;
-  Serial.begin(115200);
-  Serial.println("MAX31856 thermocouple test");
 
+  // Thermocouple stuff
   max.begin();
-
   max.setThermocoupleType(MAX31856_TCTYPE_K);
+  max.Config();
+
   update_temps();
 
   // OLED stuff
-
-  // by default, we'll generate the high voltage from the 3.3v line internally!
-  // (neat!)
   display.begin(SSD1306_SWITCHCAPVCC);
-  // init done
 
   display.setTextSize(1);
   display.setTextColor(WHITE);
@@ -46,64 +49,87 @@ void setup() {
   display.display();
 }
 
+uint16_t time_now = 0;
 void loop() {
 
   switch (theState) {
 
   case idle:
     Serial.println("In Idle");
-    update_temps();
+    checkPauseButton();
+    checkStartStopButton();
+
+    time_now = millis();
+    if (time_now - g_previous_temp_read_time >
+        TEMP_POLL_INTERVAL_MS) { // Only poll temp if > 90 ms interval
+      g_previous_temp_read_time = time_now;
+
+      time_now = millis();
+      update_temps();
+      Serial.print(F("update_temps() time: "));
+      Serial.println((uint16_t)(millis() - time_now));
+    }
+
+    time_now = millis();
+    Serial.print(F("update_display() time: "));
+    Serial.println((uint16_t)(millis() - time_now));
     update_display();
     break;
   case running:
     Serial.println("in running");
+    checkPauseButton();
+    checkStartStopButton();
     break;
   case fault:
     display.clearDisplay();
     display.setCursor(0, 0);
-    display.println("Fault: ");
+    display.println(F("Fault: "));
 
     if (g_fault & MAX31856_FAULT_CJRANGE) {
-      Serial.println("Cold Junction Range Fault");
-      display.println("Cold Junction Range Fault");
+      Serial.println(F("Cold Junction Range Fault"));
+      display.println(F("Cold Junction Range Fault"));
     }
     if (g_fault & MAX31856_FAULT_TCRANGE) {
-      Serial.println("Thermocouple Range Fault");
-      display.println("Thermocouple Range Fault");
+      Serial.println(F("Thermocouple Range Fault"));
+      display.println(F("Thermocouple Range Fault"));
     }
     if (g_fault & MAX31856_FAULT_CJHIGH) {
-      Serial.println("Cold Junction High Fault");
-      display.println("Cold Junction High Fault");
+      Serial.println(F("Cold Junction High Fault"));
+      display.println(F("Cold Junction High Fault"));
     }
     if (g_fault & MAX31856_FAULT_CJLOW) {
-      Serial.println("Cold Junction Low Fault");
-      display.println("Cold Junction Low Fault");
+      Serial.println(F("Cold Junction Low Fault"));
+      display.println(F("Cold Junction Low Fault"));
     }
     if (g_fault & MAX31856_FAULT_TCHIGH) {
-      Serial.println("Thermocouple High Fault");
-      display.println("Thermocouple High Fault");
+      Serial.println(F("Thermocouple High Fault"));
+      display.println(F("Thermocouple High Fault"));
     }
     if (g_fault & MAX31856_FAULT_TCLOW) {
-      Serial.println("Thermocouple Low Fault");
-      display.println("Thermocouple Low Fault");
+      Serial.println(F("Thermocouple Low Fault"));
+      display.println(F("Thermocouple Low Fault"));
     }
     if (g_fault & MAX31856_FAULT_OVUV) {
-      Serial.println("Over/Under Voltage Fault");
-      display.println("Over/Under Voltage Fault");
+      Serial.println(F("Over/Under Voltage Fault"));
+      display.println(F("Over/Under Voltage Fault"));
     }
     if (g_fault & MAX31856_FAULT_OPEN) {
-      Serial.println("Thermocouple Open Fault");
-      display.println("Thermocouple Open Fault");
+      Serial.println(F("Thermocouple Open Fault"));
+      display.println(F("Thermocouple Open Fault"));
     }
     display.display();
     g_fault = max.readFault();
-    Serial.println("In Fault state. Fault is reported as: ");
+    Serial.println(F("In Fault state. Fault is reported as: "));
     Serial.println(g_fault);
     if (!g_fault) {
       theState = idle;
     }
     break;
   case pause:
+    checkPauseButton();
+    checkStartStopButton();
+    update_display();
+
     break;
   }
 

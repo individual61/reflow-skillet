@@ -1,12 +1,12 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
-void button1PressAction(void);
+void startStopBtnPressAction(void);
 
-void button2PressAction(void);
+void pauseBtnPressAction(void);
 
-void checkButton1(void);
+void checkStartStopButton(void);
 
-void checkButton2(void);
+void checkPauseButton(void);
 
 #endif
