@@ -14,6 +14,8 @@ void startStopBtnPressAction(void) {
   Serial.println(F("Start/Stop button pressed."));
   if (theState == idle) {
     Serial.println(F("Switching from idle to running."));
+    g_timeStepStart = millis();
+    g_currentStep = 0;
     // do transition to running here (), like initial values for P I D and
     // resetting things
     theState = running;

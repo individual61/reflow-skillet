@@ -12,15 +12,9 @@
 // Display globals
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 
-#if (SSD1306_LCDHEIGHT != 64)
-#error("Height incorrect, please fix Adafruit_SSD1306.h!");
-#endif
-
 // Thermocouple globals
 Adafruit_MAX31856 max =
     Adafruit_MAX31856(MAX31856_CS, MAX31856_MOSI, MAX31856_MISO, MAX31856_CLK);
-// use hardware SPI, just pass in the CS pin
-// Adafruit_MAX31856 max = Adafruit_MAX31856(10);
 float g_coldtemp = 0.0;
 float g_thtemp = 0.0;
 float g_tset = 0.0;
@@ -30,6 +24,11 @@ uint16_t g_previous_temp_read_time = 0;
 // Button globalS
 //
 
+// Profile globals
+uint8_t g_currentStep = 0;
+uint16_t g_timeStepStart = 0;
+uint16_t g_timeStepElapsed = 0;
+
 // State Machine globals
 State_enum theState = idle;
 bool g_heartbeat = 0;
@@ -37,6 +36,7 @@ bool g_heartbeat = 0;
 ///////////////////////////// END GLOBALS
 
 void setup() {
+
   Serial.begin(115200);
 
   theState = idle;
@@ -46,8 +46,10 @@ void setup() {
   max.begin();
   max.setThermocoupleType(MAX31856_TCTYPE_K);
   max.config();
-
   update_temps();
+
+  // Profile stuff
+  g_currentStep = 0;
 
   // OLED stuff
   display.begin(SSD1306_SWITCHCAPVCC);
@@ -87,6 +89,12 @@ void loop() {
       g_previous_temp_read_time = time_now;
       update_temps();
     }
+
+    g_timeStepElapsed = millis() - g_timeStepStart;
+    if (g_timeStepElapsed > (1000 * profile[2 * g_currentStep])) {
+      advance_to_next_step();
+    }
+
     update_display();
     break;
   case fault:
