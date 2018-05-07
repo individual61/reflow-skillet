@@ -6,7 +6,7 @@ void update_temps() {
   if (!g_fault) {
 
     g_thtemp = max.readThermocoupleTemperature();
-    //    g_coldtemp = max.readCJTemperature();
+    g_coldtemp = max.readCJTemperature();
     /*    Serial.print("Cold: ");
         Serial.print(g_coldtemp);
         Serial.print("\tTC: ");

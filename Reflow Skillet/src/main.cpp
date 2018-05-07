@@ -2,10 +2,19 @@
 
 // Modified Adafruit thermocouple library per
 // https://forums.adafruit.com/viewtopic.php?f=19&t=108896
+
+// If the screen looks stretched vertically, and skips lines, then the Adafruit
+// library header file must be edited as parameters
+// https://learn.adafruit.com/monochrome-oled-breakouts/arduino-library-and-examples
+
 //////////////////////// GLOBALS
 
 // Display globals
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+
+#if (SSD1306_LCDHEIGHT != 64)
+#error("Height incorrect, please fix Adafruit_SSD1306.h!");
+#endif
 
 // Thermocouple globals
 Adafruit_MAX31856 max =
@@ -15,9 +24,7 @@ Adafruit_MAX31856 max =
 float g_coldtemp = 0.0;
 float g_thtemp = 0.0;
 float g_tset = 0.0;
-
 uint8_t g_fault = 0;
-
 uint16_t g_previous_temp_read_time = 0;
 
 // Button globalS
@@ -25,6 +32,7 @@ uint16_t g_previous_temp_read_time = 0;
 
 // State Machine globals
 State_enum theState = idle;
+bool g_heartbeat = 0;
 
 ///////////////////////////// END GLOBALS
 
@@ -53,11 +61,10 @@ void setup() {
 
 uint16_t time_now = 0;
 void loop() {
-
+  g_heartbeat = !g_heartbeat;
   switch (theState) {
 
   case idle:
-    Serial.println("In Idle");
     checkPauseButton();
     checkStartStopButton();
 
@@ -65,22 +72,22 @@ void loop() {
     if (time_now - g_previous_temp_read_time >
         TEMP_POLL_INTERVAL_MS) { // Only poll temp if > 90 ms interval
       g_previous_temp_read_time = time_now;
-
-      time_now = millis();
       update_temps();
-      Serial.print(F("update_temps() time: "));
-      Serial.println((uint16_t)(millis() - time_now));
     }
 
-    time_now = millis();
-    Serial.print(F("update_display() time: "));
-    Serial.println((uint16_t)(millis() - time_now));
     update_display();
     break;
   case running:
-    Serial.println("in running");
     checkPauseButton();
     checkStartStopButton();
+
+    time_now = millis();
+    if (time_now - g_previous_temp_read_time >
+        TEMP_POLL_INTERVAL_MS) { // Only poll temp if > 90 ms interval
+      g_previous_temp_read_time = time_now;
+      update_temps();
+    }
+    update_display();
     break;
   case fault:
     display.clearDisplay();
@@ -130,6 +137,13 @@ void loop() {
   case pause:
     checkPauseButton();
     checkStartStopButton();
+
+    time_now = millis();
+    if (time_now - g_previous_temp_read_time >
+        TEMP_POLL_INTERVAL_MS) { // Only poll temp if > 90 ms interval
+      g_previous_temp_read_time = time_now;
+      update_temps();
+    }
     update_display();
 
     break;

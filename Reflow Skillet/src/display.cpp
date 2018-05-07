@@ -12,9 +12,9 @@ void update_display() {
   } else {
     display.println(g_tset);
   }
-  //  display.setCursor(0, 55);
-  //  display.print(F("Tcj:  "));
-  //  display.print(g_coldtemp);
+  display.setCursor(0, 55);
+  display.print(F("Tcj:  "));
+  display.print(g_coldtemp);
   display.setCursor(80, 0);
   if (theState == idle)
     display.print(F("Idle"));
@@ -24,6 +24,10 @@ void update_display() {
     display.print(F("Fault"));
   else if (theState == pause)
     display.print(F("Paused"));
+
+  if (g_heartbeat) {
+    display.drawRect(126, 62, 2, 2, WHITE);
+  }
 
   display.display();
 }

@@ -17,11 +17,13 @@ void startStopBtnPressAction(void) {
     // do transition to running here (), like initial values for P I D and
     // resetting things
     theState = running;
+    return;
   }
   if (theState == running) {
     Serial.println(F("Switching from running to idle."));
     // do transition to idle here ()
     theState = idle;
+    return;
   }
 }
 

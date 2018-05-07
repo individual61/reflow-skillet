@@ -149,7 +149,7 @@ void Adafruit_MAX31856::oneShotTemperature(void) {
 }
 
 float Adafruit_MAX31856::readCJTemperature(void) {
-  oneShotTemperature();
+  //  oneShotTemperature();
 
   int16_t temp16 = readRegister16(MAX31856_CJTH_REG);
   float tempfloat = temp16;
@@ -159,7 +159,7 @@ float Adafruit_MAX31856::readCJTemperature(void) {
 }
 
 float Adafruit_MAX31856::readThermocoupleTemperature(void) {
-  oneShotTemperature();
+  //  oneShotTemperature();
 
   int32_t temp24 = readRegister24(MAX31856_LTCBH_REG);
   if (temp24 & 0x800000) {

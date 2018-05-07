@@ -19,7 +19,7 @@
 
 #define PAUSE_BTN 4
 #define STARTSTOP_BTN 3
-#define DEBOUNCEDELAY 300
+#define DEBOUNCEDELAY 2000
 
 /////////////////// SPI
 // Pro Trinket SPI Connections (common to both devices)
@@ -71,7 +71,12 @@ extern uint8_t g_fault;
 extern uint16_t g_previous_temp_read_time;
 
 // Button globalS
+
+// State machine globalS
+
 enum State_enum { running, idle, fault, pause };
 extern State_enum theState;
+
+extern bool g_heartbeat;
 
 #endif
