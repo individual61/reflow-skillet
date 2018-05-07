@@ -18,6 +18,8 @@ float g_tset = 0.0;
 
 uint8_t g_fault = 0;
 
+uint16_t g_previous_temp_read_time = 0;
+
 // Button globalS
 //
 
@@ -35,7 +37,7 @@ void setup() {
   // Thermocouple stuff
   max.begin();
   max.setThermocoupleType(MAX31856_TCTYPE_K);
-  max.Config();
+  max.config();
 
   update_temps();
 

@@ -1,11 +1,11 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+#include "Adafruit_MAX31856_modified.h"
 #include "buttons.h"
 #include "display.h"
 #include "temp.h"
 #include <Adafruit_GFX.h>
-#include <Adafruit_MAX31856.h>
 #include <Adafruit_SSD1306.h>
 #include <Arduino.h>
 #include <avr/pgmspace.h>
