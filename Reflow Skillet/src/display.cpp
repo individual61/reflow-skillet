@@ -16,7 +16,7 @@ void update_display() {
   // Tset display
   display.print(F("Tset: "));
   if ((theState == running) || (theState == pause)) {
-    display.println(profile[2 * g_currentStep + 1]);
+    display.println((float)(profile[2 * g_currentStep + 1]));
   } else if (theState == idle) {
     display.println(F("--"));
   }
