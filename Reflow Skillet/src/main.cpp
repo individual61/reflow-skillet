@@ -29,6 +29,14 @@ uint8_t g_currentStep = 0;
 uint16_t g_timeStepStart = 0;
 uint16_t g_timeStepElapsed = 0;
 
+uint16_t profile[] = {
+    3, 5,  // 0
+    3, 10, // 1
+    3, 15, // 2
+    3, 20, // 3
+    3, 25  // 4
+};
+
 // State Machine globals
 State_enum theState = idle;
 bool g_heartbeat = 0;

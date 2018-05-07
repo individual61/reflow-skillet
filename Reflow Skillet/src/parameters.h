@@ -4,6 +4,7 @@
 #include "Adafruit_MAX31856_modified.h"
 #include "buttons.h"
 #include "display.h"
+#include "profile.h"
 #include "temp.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -78,5 +79,13 @@ enum State_enum { running, idle, fault, pause };
 extern State_enum theState;
 
 extern bool g_heartbeat;
+
+// Profile globals
+extern uint8_t g_currentStep;
+extern uint16_t g_timeStepStart;
+extern uint16_t g_timeStepElapsed;
+
+#define NUMBER_OF_PROFILE_STEPS 5
+extern uint16_t profile[2 * NUMBER_OF_PROFILE_STEPS];
 
 #endif
