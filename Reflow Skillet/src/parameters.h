@@ -88,4 +88,7 @@ extern uint16_t g_timeStepElapsed;
 #define NUMBER_OF_PROFILE_STEPS 5
 extern uint16_t profile[2 * NUMBER_OF_PROFILE_STEPS];
 
+// PID globalS
+extern bool g_heating;
+
 #endif

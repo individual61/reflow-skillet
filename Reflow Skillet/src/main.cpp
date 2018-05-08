@@ -41,6 +41,9 @@ uint16_t profile[] = {
 State_enum theState = idle;
 bool g_heartbeat = 0;
 
+// PID globalS
+bool g_heating = 0;
+
 ///////////////////////////// END GLOBALS
 
 void setup() {

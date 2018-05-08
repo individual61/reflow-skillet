@@ -22,6 +22,7 @@ void update_display() {
   }
 
   // Step #
+  display.println();
   display.print(F("Step: "));
   if ((theState == running) || (theState == pause)) {
     display.print(g_currentStep);
@@ -47,6 +48,14 @@ void update_display() {
   else if (theState == pause)
     display.print(F("Paused"));
 
+  // Heating display
+  if (!g_heating) { // remove !
+    display.fillRoundRect(72, 53, 50, 11, 4, WHITE);
+    display.setCursor(77, 55);
+    display.setTextColor(BLACK);
+    display.print(F("HEATING"));
+    display.setTextColor(WHITE);
+  }
   // Heartbeat display
   if (g_heartbeat) {
     display.drawRect(126, 62, 2, 2, WHITE);
