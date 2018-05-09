@@ -7,6 +7,7 @@ void advance_to_next_step(void) {
     theState = idle;
     Serial.println(F("Program completed."));
   } else {
+    g_tset = (float)(profile[2 * g_currentStep + 1]);
     g_timeStepStart = millis();
     Serial.print(F("Starting step "));
     Serial.print(g_currentStep);

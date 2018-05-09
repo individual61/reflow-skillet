@@ -61,9 +61,9 @@
 
 /////////////////// PID
 
-#define KP 2.0
-#define KI 5.0
-#define KD 1.0
+#define KP 1.0
+#define KI 0.0
+#define KD 0.0
 #define WINDOWSIZE 1000     // minimum SSR cycle period in ms
 #define PID_SAMPLE_TIME 200 // how often PID loop is updated
 

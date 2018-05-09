@@ -30,11 +30,11 @@ uint16_t g_timeStepStart = 0;
 uint16_t g_timeStepElapsed = 0;
 
 uint16_t profile[] = {
-    3, 5,  // 0
-    3, 10, // 1
-    3, 15, // 2
-    3, 20, // 3
-    3, 25  // 4
+    30, 50, // 0
+    30, 60, // 1
+    30, 70, // 2
+    30, 20, // 3
+    30, 0   // 4
 };
 
 // State Machine globals
@@ -82,6 +82,7 @@ void setup() {
   display.display();
 
   // PID stuff
+  g_heating = 0;
   g_windowStartTime = millis();
   myPID.SetOutputLimits(0, WINDOWSIZE);
   myPID.SetMode(AUTOMATIC);
@@ -93,7 +94,7 @@ void loop() {
   g_heartbeat = !g_heartbeat;
   switch (theState) {
 
-  case idle:
+  case idle: ///////////////////////////// IDLE
     checkPauseButton();
     checkStartStopButton();
 
@@ -106,7 +107,8 @@ void loop() {
 
     update_display();
     break;
-  case running:
+
+  case running: ///////////////////////////// RUNNING
     checkPauseButton();
     checkStartStopButton();
 
@@ -118,15 +120,18 @@ void loop() {
     }
 
     update_PID_and_set_output();
+    update_display();
 
     g_timeStepElapsed = millis() - g_timeStepStart;
     if (g_timeStepElapsed > (1000 * profile[2 * g_currentStep])) {
       advance_to_next_step();
     }
 
-    update_display();
     break;
-  case fault:
+
+  case fault: ///////////////////////////// FAULT
+
+    // SET OUTPUT PIN LOW HERE
     display.clearDisplay();
     display.setCursor(0, 0);
     display.println(F("Fault: "));
@@ -171,7 +176,7 @@ void loop() {
       theState = idle;
     }
     break;
-  case pause:
+  case pause: ///////////////////////////// PAUSED
     checkPauseButton();
     checkStartStopButton();
 
@@ -181,6 +186,7 @@ void loop() {
       g_previous_temp_read_time = time_now;
       update_temps();
     }
+    update_PID_and_set_output();
     update_display();
 
     break;

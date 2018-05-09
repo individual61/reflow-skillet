@@ -15,9 +15,11 @@ void startStopBtnPressAction(void) {
   if (theState == idle) {
     Serial.println(F("Switching from idle to running."));
     g_timeStepStart = millis();
+
     g_currentStep = 0;
-    // do transition to running here (), like initial values for P I D and
-    // resetting things
+    g_tset = (float)(profile[2 * g_currentStep + 1]);
+    g_PID_setpoint = g_tset;
+
     theState = running;
     return;
   }

@@ -16,7 +16,7 @@ void update_display() {
   // Tset display
   display.print(F("Tset: "));
   if ((theState == running) || (theState == pause)) {
-    display.println((float)(profile[2 * g_currentStep + 1]), 1);
+    display.println(g_tset, 1);
   } else if (theState == idle) {
     display.println(F("--"));
   }
@@ -33,7 +33,8 @@ void update_display() {
   }
 
   // fake temp
-  display.print(map(g_fake_temp, 0, 1023, 95, 5));
+  display.println(g_fake_temp);
+  display.println(g_PID_output);
 
   // COld junction temp
   display.setCursor(0, 57);
@@ -52,7 +53,7 @@ void update_display() {
     display.print(F("Paused"));
 
   // Heating display
-  if (!g_heating) { // remove !
+  if (g_heating) { // remove !
     display.fillRoundRect(72, 53, 50, 11, 4, WHITE);
     display.setCursor(77, 55);
     display.setTextColor(BLACK);
