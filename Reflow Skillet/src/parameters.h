@@ -4,11 +4,13 @@
 #include "Adafruit_MAX31856_modified.h"
 #include "buttons.h"
 #include "display.h"
+#include "pid.h"
 #include "profile.h"
 #include "temp.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Arduino.h>
+#include <PID_V1.h>
 #include <avr/pgmspace.h>
 
 ///////////////////
@@ -57,6 +59,14 @@
 //#endif
 // end OLED preamble
 
+/////////////////// PID
+
+#define KP 2.0
+#define KI 5.0
+#define KD 1.0
+#define WINDOWSIZE 1000     // minimum SSR cycle period in ms
+#define PID_SAMPLE_TIME 200 // how often PID loop is updated
+
 //////////////////////// GLOBALS
 // Display globals
 extern Adafruit_SSD1306 display;
@@ -89,6 +99,14 @@ extern uint16_t g_timeStepElapsed;
 extern uint16_t profile[2 * NUMBER_OF_PROFILE_STEPS];
 
 // PID globalS
+extern PID myPID;
 extern bool g_heating;
+
+extern float g_fake_temp;
+extern uint16_t g_windowStartTime;
+
+extern double g_PID_setpoint; // from profile
+extern double g_PID_output;   // control relay ON time
+extern double g_PID_input;    // measured temp
 
 #endif

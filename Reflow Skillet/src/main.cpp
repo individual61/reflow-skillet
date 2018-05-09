@@ -44,6 +44,16 @@ bool g_heartbeat = 0;
 // PID globalS
 bool g_heating = 0;
 
+float g_fake_temp = 25.0;
+
+uint16_t g_windowStartTime = 0;
+
+double g_PID_setpoint = 0; // from profile
+double g_PID_output = 0;   // control relay ON time
+double g_PID_input = 0;    // measured temp
+
+PID myPID(&g_PID_input, &g_PID_output, &g_PID_setpoint, KP, KI, KD, DIRECT);
+
 ///////////////////////////// END GLOBALS
 
 void setup() {
@@ -70,6 +80,12 @@ void setup() {
   display.setCursor(0, 0);
   display.clearDisplay();
   display.display();
+
+  // PID stuff
+  g_windowStartTime = millis();
+  myPID.SetOutputLimits(0, WINDOWSIZE);
+  myPID.SetMode(AUTOMATIC);
+  myPID.SetSampleTime(PID_SAMPLE_TIME);
 }
 
 uint16_t time_now = 0;
@@ -100,6 +116,8 @@ void loop() {
       g_previous_temp_read_time = time_now;
       update_temps();
     }
+
+    update_PID_and_set_output();
 
     g_timeStepElapsed = millis() - g_timeStepStart;
     if (g_timeStepElapsed > (1000 * profile[2 * g_currentStep])) {

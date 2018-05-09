@@ -11,12 +11,12 @@ void update_display() {
   // Tact display
   display.setCursor(0, 0);
   display.print(F("Tact: "));
-  display.println(g_thtemp);
+  display.println(g_thtemp, 1);
 
   // Tset display
   display.print(F("Tset: "));
   if ((theState == running) || (theState == pause)) {
-    display.println((float)(profile[2 * g_currentStep + 1]));
+    display.println((float)(profile[2 * g_currentStep + 1]), 1);
   } else if (theState == idle) {
     display.println(F("--"));
   }
@@ -32,10 +32,13 @@ void update_display() {
     display.println(F("--"));
   }
 
+  // fake temp
+  display.print(map(g_fake_temp, 0, 1023, 95, 5));
+
   // COld junction temp
   display.setCursor(0, 57);
   display.print(F("Tcj:  "));
-  display.print(g_coldtemp);
+  display.print(g_coldtemp, 1);
 
   // State display
   display.setCursor(80, 0);

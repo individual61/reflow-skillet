@@ -7,6 +7,7 @@ void update_temps() {
 
     g_thtemp = max.readThermocoupleTemperature();
     g_coldtemp = max.readCJTemperature();
+    g_fake_temp = analogRead(0);
     /*    Serial.print("Cold: ");
         Serial.print(g_coldtemp);
         Serial.print("\tTC: ");
