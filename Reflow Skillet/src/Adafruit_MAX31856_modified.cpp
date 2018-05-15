@@ -1,5 +1,5 @@
 /***************************************************
- MODIFIED: SEARCH FOR "MODIFIED"
+// MODIFIED: SEARCH FOR "MODIFIED". Modified by Paul Blackburn 2018
 
   This is a library for the Adafruit Thermocouple Sensor w/MAX31856
 
