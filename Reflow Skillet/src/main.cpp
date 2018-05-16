@@ -87,6 +87,9 @@ void setup() {
   myPID.SetOutputLimits(0, PID_OUTPUTLIMIT);
   myPID.SetMode(AUTOMATIC);
   myPID.SetSampleTime(PID_SAMPLE_TIME);
+
+  // SSR stuff
+  pinMode(OUTPUT_PIN, OUTPUT);
 }
 
 uint16_t time_now = 0;

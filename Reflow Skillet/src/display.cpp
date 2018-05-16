@@ -25,7 +25,7 @@ void update_display() {
   display.println();
   display.print(F("Step: "));
   if ((theState == running) || (theState == pause)) {
-    display.print(g_currentStep);
+    display.print(g_currentStep+1);
     display.print(F(" of "));
     display.println(NUMBER_OF_PROFILE_STEPS);
   } else if (theState == idle) {
