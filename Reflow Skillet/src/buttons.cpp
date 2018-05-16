@@ -21,6 +21,7 @@ void startStopBtnPressAction(void) {
     g_PID_setpoint = g_tset;
 
     theState = running;
+
     return;
   }
   if (theState == running) {

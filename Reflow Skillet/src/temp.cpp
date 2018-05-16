@@ -9,11 +9,11 @@ void update_temps() {
     g_coldtemp = max.readCJTemperature();
     g_fake_temp = analogRead(0);
     g_fake_temp = map(g_fake_temp, 0, 1023, 95, 5);
-    /*    Serial.print("Cold: ");
-        Serial.print(g_coldtemp);
-        Serial.print("\tTC: ");
-        Serial.println(g_thtemp);
-        */
+    //   Serial.print("Cold: ");
+    //    Serial.print(g_coldtemp);
+    Serial.print(g_tset);
+    Serial.print(F("\t"));
+    Serial.println(g_thtemp);
 
   } else {
     theState = fault;

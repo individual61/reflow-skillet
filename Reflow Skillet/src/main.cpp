@@ -19,22 +19,22 @@ float g_coldtemp = 0.0;
 float g_thtemp = 0.0;
 float g_tset = 0.0;
 uint8_t g_fault = 0;
-uint16_t g_previous_temp_read_time = 0;
+uint32_t g_previous_temp_read_time = 0;
 
 // Button globalS
 //
 
 // Profile globals
 uint8_t g_currentStep = 0;
-uint16_t g_timeStepStart = 0;
-uint16_t g_timeStepElapsed = 0;
+uint32_t g_timeStepStart = 0;
+uint32_t g_timeStepElapsed = 0;
 
 uint16_t profile[] = {
-    30, 50, // 0
-    30, 60, // 1
-    30, 70, // 2
-    30, 20, // 3
-    30, 0   // 4
+    10, 50, // 0
+    10, 60, // 1
+    10, 70, // 2
+    10, 20, // 3
+    10, 0   // 4
 };
 
 // State Machine globals
@@ -46,7 +46,7 @@ bool g_heating = 0;
 
 float g_fake_temp = 25.0;
 
-uint16_t g_windowStartTime = 0;
+uint32_t g_windowStartTime = 0;
 
 double g_PID_setpoint = 0; // from profile
 double g_PID_output = 0;   // control relay ON time
@@ -84,7 +84,7 @@ void setup() {
   // PID stuff
   g_heating = 0;
   g_windowStartTime = millis();
-  myPID.SetOutputLimits(0, WINDOWSIZE);
+  myPID.SetOutputLimits(0, PID_OUTPUTLIMIT);
   myPID.SetMode(AUTOMATIC);
   myPID.SetSampleTime(PID_SAMPLE_TIME);
 }

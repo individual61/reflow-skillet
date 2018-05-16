@@ -60,11 +60,12 @@
 // end OLED preamble
 
 /////////////////// PID
-
-#define KP 1.0
+#define PID_OUTPUTLIMIT 100.0
+#define KP (100.0 / 40.0)
 #define KI 0.0
 #define KD 0.0
-#define WINDOWSIZE 1000     // minimum SSR cycle period in ms
+#define WINDOWSIZE 3000     // minimum SSR cycle period in ms
+#define WINDOWSIZEDIV100 30 // window size divided by 100
 #define PID_SAMPLE_TIME 200 // how often PID loop is updated
 
 //////////////////////// GLOBALS
@@ -79,7 +80,7 @@ extern float g_coldtemp;
 extern float g_thtemp;
 extern float g_tset;
 extern uint8_t g_fault;
-extern uint16_t g_previous_temp_read_time;
+extern uint32_t g_previous_temp_read_time;
 
 // Button globalS
 
@@ -92,8 +93,8 @@ extern bool g_heartbeat;
 
 // Profile globals
 extern uint8_t g_currentStep;
-extern uint16_t g_timeStepStart;
-extern uint16_t g_timeStepElapsed;
+extern uint32_t g_timeStepStart;
+extern uint32_t g_timeStepElapsed;
 
 #define NUMBER_OF_PROFILE_STEPS 5
 extern uint16_t profile[2 * NUMBER_OF_PROFILE_STEPS];
@@ -103,7 +104,7 @@ extern PID myPID;
 extern bool g_heating;
 
 extern float g_fake_temp;
-extern uint16_t g_windowStartTime;
+extern uint32_t g_windowStartTime;
 
 extern double g_PID_setpoint; // from profile
 extern double g_PID_output;   // control relay ON time
