@@ -32,14 +32,44 @@ void update_display() {
     display.println(F("--"));
   }
 
+  display.print(F("Time remaining: "));
+
+uint16_t accum = 0;
+  if ((theState == running) || (theState == pause)) {
+
+    for(int i = g_currentStep; i < NUMBER_OF_PROFILE_STEPS; i++)
+    {
+      accum = accum + profile[2 * g_currentStep];
+    }
+  // Serial.print(F("accum after loop: "));
+  //    Serial.print(accum);
+  accum = accum - (g_timeStepElapsed / 1000.0);
+  //    Serial.print(F("\t minus current step:"));
+  //    Serial.println(accum);
+  display.print(accum, 1);
+  display.println(F(" s"));
+  }
+  else if (theState == idle) {
+    display.println(F("--"));
+  }
+
+
+
+
   // fake temp
-  display.println(g_fake_temp);
-  display.println(g_PID_output);
+//  display.println(g_fake_temp);
+//  display.println(g_PID_output);
+
+  // Output
+  display.setCursor(0, 56); // 57 is lowest
+  display.print(F("Out: "));
+  display.print(g_PID_output, 1);
+  display.print(F("\%"));
 
   // COld junction temp
-  display.setCursor(0, 57);
-  display.print(F("Tcj:  "));
-  display.print(g_coldtemp, 1);
+  //display.setCursor(0, 57);
+  //display.print(F("Tcj:  "));
+  //display.print(g_coldtemp, 1);
 
   // State display
   display.setCursor(80, 0);
