@@ -29,7 +29,7 @@ uint8_t g_currentStep = 0;
 uint32_t g_timeStepStart = 0;
 uint32_t g_timeStepElapsed = 0;
 
-uint16_t profile[] = {
+uint32_t profile[] = {
     1000, 100, // 0
     10, 60, // 1
     10, 70, // 2
@@ -121,6 +121,8 @@ void loop() {
         TEMP_POLL_INTERVAL_MS) { // Only poll temp if > 90 ms interval
       g_previous_temp_read_time = time_now;
       update_temps();
+
+
     }
 
     update_PID_and_set_output();
@@ -128,6 +130,10 @@ void loop() {
 
     g_timeStepElapsed = millis() - g_timeStepStart;
     if (g_timeStepElapsed > (1000 * profile[2 * g_currentStep])) {
+  //    Serial.print(F("g_timeStepElapsed: "));
+  //    Serial.println(g_timeStepElapsed);
+  //    Serial.print(F("(1000 * profile[2 * g_currentStep]): "));
+  //    Serial.println((1000 * profile[2 * g_currentStep]));
       advance_to_next_step();
     }
 

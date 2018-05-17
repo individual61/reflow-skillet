@@ -97,7 +97,7 @@ extern uint32_t g_timeStepStart;
 extern uint32_t g_timeStepElapsed;
 
 #define NUMBER_OF_PROFILE_STEPS 5
-extern uint16_t profile[2 * NUMBER_OF_PROFILE_STEPS];
+extern uint32_t profile[2 * NUMBER_OF_PROFILE_STEPS];
 
 // PID globalS
 extern PID myPID;
