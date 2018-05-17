@@ -30,7 +30,7 @@ uint32_t g_timeStepStart = 0;
 uint32_t g_timeStepElapsed = 0;
 
 uint16_t profile[] = {
-    10, 50, // 0
+    1000, 100, // 0
     10, 60, // 1
     10, 70, // 2
     10, 20, // 3
@@ -90,6 +90,7 @@ void setup() {
 
   // SSR stuff
   pinMode(OUTPUT_PIN, OUTPUT);
+  digitalWrite(OUTPUT_PIN, LOW);
 }
 
 uint16_t time_now = 0;

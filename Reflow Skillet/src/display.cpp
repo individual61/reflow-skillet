@@ -39,7 +39,7 @@ uint16_t accum = 0;
 
     for(int i = g_currentStep; i < NUMBER_OF_PROFILE_STEPS; i++)
     {
-      accum = accum + profile[2 * g_currentStep];
+      accum = accum + profile[2 * i];
     }
   // Serial.print(F("accum after loop: "));
   //    Serial.print(accum);

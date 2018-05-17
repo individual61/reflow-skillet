@@ -1,7 +1,8 @@
 #include "parameters.h"
 
 void update_PID_and_set_output(void) {
-  g_PID_input = g_fake_temp;
+//  g_PID_input = g_fake_temp;
+ g_PID_input = g_thtemp;
   g_PID_setpoint = g_tset;
 
   myPID.Compute();

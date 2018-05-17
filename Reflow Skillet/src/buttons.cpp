@@ -28,6 +28,10 @@ void startStopBtnPressAction(void) {
     Serial.println(F("Switching from running to idle."));
     // do transition to idle here ()
     theState = idle;
+    g_tset = 0.0;
+        g_PID_setpoint = g_tset;
+    g_heating = 0;
+      digitalWrite(OUTPUT_PIN, LOW);
     return;
   }
 }
