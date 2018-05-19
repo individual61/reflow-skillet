@@ -104,7 +104,7 @@ extern double g_t_ramp_start;
 extern double g_t_ramp_end;
 
 #define NUMBER_OF_PROFILE_STEPS 5
-extern uint32_t profile_times[NUMBER_OF_PROFILE_STEPS];
+extern double profile_times[NUMBER_OF_PROFILE_STEPS];
 extern double profile_temps[NUMBER_OF_PROFILE_STEPS];
 
 

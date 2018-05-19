@@ -12,8 +12,8 @@ void update_temps() {
 
                         g_thtemp = max.readThermocoupleTemperature();
                         g_coldtemp = max.readCJTemperature();
-                        g_fake_temp = analogRead(0);
-                        g_fake_temp = map(g_fake_temp, 0, 1023, 95, 5);
+                //        g_fake_temp = analogRead(0);
+                //        g_fake_temp = map(g_fake_temp, 0, 1023, 95, 5);
 
                 } else {
                         theState = fault;

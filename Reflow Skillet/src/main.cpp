@@ -32,22 +32,22 @@ uint32_t g_step_duration = 0;
 double g_t_ramp_start = 0.0;
 double g_t_ramp_end = 0.0;
 
-uint32_t profile_times[] =
+double profile_times[] =
 {
-	10, // 0
-	10, // 1
-	10, // 2
-	10, // 3
-	10 // 4
+	10.0, // 0
+	10.0, // 1
+	10.0, // 2
+	10.0, // 3
+	10.0 // 4
 };
 
 double profile_temps[] =
 {
 	50, // 0
-	60, // 1
-	70, // 2
-	80, // 3
-	90 // 4
+	100, // 1
+	50, // 2
+	100, // 3
+	50 // 4
 };
 
 // State Machine globals
@@ -125,22 +125,30 @@ void loop()
 		checkPauseButton();
 		checkStartStopButton();
 		update_temps();
-    g_timeStepElapsed = millis() - g_timeStepStart;
-    if (g_timeStepElapsed > (1000 * profile_times[g_currentStep]))
-    {
-      advance_to_next_step();
-    }
+		g_timeStepElapsed = millis() - g_timeStepStart;
+
 		calculate_tset_from_ramp(g_t_ramp_start, g_t_ramp_end, profile_times[g_currentStep], (double)(g_timeStepElapsed/1000.0)); // also sets g_PID_setpoint
 		update_PID_and_set_output();
 		update_display();
 
-
-    Serial.print(g_timeStepElapsed/1000);
+		//	Serial.print(F("g_t_ramp_start "));
+		//	Serial.print(g_t_ramp_start);
+//		Serial.print(F("\tg_t_ramp_end "));
+//		Serial.print(g_t_ramp_end);
+//		Serial.print(F("\tprofile_times[g_currentStep] "));
+//		Serial.print(profile_times[g_currentStep]);
+//		Serial.print(F("\tg_timeStepElapsed/1000.0 "));
+		Serial.print(g_timeStepElapsed/1000.0);
+//		Serial.print(F("\tg_tset "));
 		Serial.print(F("\t"));
 		Serial.print(g_tset);
+		//	Serial.print(F("\t g_thtemp"));
 		Serial.print(F("\t"));
 		Serial.println(g_thtemp);
-
+		if (g_timeStepElapsed > (1000 * profile_times[g_currentStep]))
+		{
+			advance_to_next_step();
+		}
 		break;
 
 	case fault: ///////////////////////////// FAULT
