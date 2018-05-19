@@ -14,7 +14,7 @@ Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 
 // Thermocouple globals
 Adafruit_MAX31856 max =
-        Adafruit_MAX31856(MAX31856_CS, MAX31856_MOSI, MAX31856_MISO, MAX31856_CLK);
+	Adafruit_MAX31856(MAX31856_CS, MAX31856_MOSI, MAX31856_MISO, MAX31856_CLK);
 float g_coldtemp = 0.0;
 float g_thtemp = 0.0;
 float g_tset = 0.0;
@@ -32,12 +32,22 @@ uint32_t g_step_duration = 0;
 double g_t_ramp_start = 0.0;
 double g_t_ramp_end = 0.0;
 
-uint32_t profile[] = {
-        1000, 100, // 0
-        10,   60,// 1
-        10,   70,// 2
-        10,   20,// 3
-        10,   0// 4
+uint32_t profile_times[] =
+{
+	10, // 0
+	10, // 1
+	10, // 2
+	10, // 3
+	10 // 4
+};
+
+double profile_temps[] =
+{
+	50, // 0
+	60, // 1
+	70, // 2
+	80, // 3
+	90 // 4
 };
 
 // State Machine globals
@@ -59,133 +69,106 @@ PID myPID(&g_PID_input, &g_PID_output, &g_PID_setpoint, KP, KI, KD, DIRECT);
 
 ///////////////////////////// END GLOBALS
 
-void setup() {
+void setup()
+{
 
-        Serial.begin(115200);
+	Serial.begin(115200);
 
-        theState = idle;
-        g_fault = 0;
+	theState = idle;
+	g_fault = 0;
 
-        // Thermocouple stuff
-        max.begin();
-        max.setThermocoupleType(MAX31856_TCTYPE_K);
-        max.config();
-        update_temps();
+	// Thermocouple stuff
+	max.begin();
+	max.setThermocoupleType(MAX31856_TCTYPE_K);
+	max.config();
+	update_temps();
 
-        // Profile stuff
-        g_currentStep = 0;
+	// Profile stuff
+	g_currentStep = 0;
 
-        // OLED stuff
-        display.begin(SSD1306_SWITCHCAPVCC);
+	// OLED stuff
+	display.begin(SSD1306_SWITCHCAPVCC);
 
-        display.setTextSize(1);
-        display.setTextColor(WHITE);
-        display.setCursor(0, 0);
-        display.clearDisplay();
-        display.display();
+	display.setTextSize(1);
+	display.setTextColor(WHITE);
+	display.setCursor(0, 0);
+	display.clearDisplay();
+	display.display();
 
-        // PID stuff
-        g_heating = 0;
-        g_windowStartTime = millis();
-        myPID.SetOutputLimits(0, PID_OUTPUTLIMIT);
-        myPID.SetMode(AUTOMATIC);
-        myPID.SetSampleTime(PID_SAMPLE_TIME);
+	// PID stuff
+	g_heating = 0;
+	g_windowStartTime = millis();
+	myPID.SetOutputLimits(0, PID_OUTPUTLIMIT);
+	myPID.SetMode(AUTOMATIC);
+	myPID.SetSampleTime(PID_SAMPLE_TIME);
 
-        // SSR stuff
-        pinMode(OUTPUT_PIN, OUTPUT);
-        digitalWrite(OUTPUT_PIN, LOW);
+	// SSR stuff
+	pinMode(OUTPUT_PIN, OUTPUT);
+	digitalWrite(OUTPUT_PIN, LOW);
 }
 
 
-void loop() {
-        g_heartbeat = !g_heartbeat;
+void loop()
+{
+	g_heartbeat = !g_heartbeat;
 
-        switch (theState) {
+	switch (theState) {
 
-        case idle: ///////////////////////////// IDLE
-                checkPauseButton();
-                checkStartStopButton();
-                update_temps();
-                update_display();
-                break;
+	case idle: ///////////////////////////// IDLE
+		checkPauseButton();
+		checkStartStopButton();
+		update_temps();
+		update_display();
+		break;
 
-        case running: ///////////////////////////// RUNNING
-                checkPauseButton();
-                checkStartStopButton();
-                update_temps();
+	case running: ///////////////////////////// RUNNING
+		checkPauseButton();
+		checkStartStopButton();
+		update_temps();
+    g_timeStepElapsed = millis() - g_timeStepStart;
+    if (g_timeStepElapsed > (1000 * profile_times[g_currentStep]))
+    {
+      advance_to_next_step();
+    }
+		calculate_tset_from_ramp(g_t_ramp_start, g_t_ramp_end, profile_times[g_currentStep], (double)(g_timeStepElapsed/1000.0)); // also sets g_PID_setpoint
+		update_PID_and_set_output();
+		update_display();
 
-                Serial.print(g_tset);
-                Serial.print(F("\t"));
-                Serial.println(g_thtemp);
 
-                calculate_tset_from_ramp();
-                update_PID_and_set_output();
-                update_display();
+    Serial.print(g_timeStepElapsed/1000);
+		Serial.print(F("\t"));
+		Serial.print(g_tset);
+		Serial.print(F("\t"));
+		Serial.println(g_thtemp);
 
-                g_timeStepElapsed = millis() - g_timeStepStart;
-                if (g_timeStepElapsed > (1000 * profile[2 * g_currentStep]))
-                {
-                        advance_to_next_step();
-                }
+		break;
 
-                break;
+	case fault: ///////////////////////////// FAULT
+		digitalWrite(OUTPUT_PIN, LOW);
+		g_heating = 0;
+		display.clearDisplay();
+		display.setCursor(0, 0);
+		display.println(F("Fault: "));
 
-        case fault: ///////////////////////////// FAULT
+		display_fault();
 
-                // SET OUTPUT PIN LOW HERE
-                display.clearDisplay();
-                display.setCursor(0, 0);
-                display.println(F("Fault: "));
+		g_fault = max.readFault();
+		Serial.println(F("In Fault state. Fault is reported as: "));
+		Serial.println(g_fault);
+		if (!g_fault) {
+			theState = idle;
+		}
+		break;
 
-                if (g_fault & MAX31856_FAULT_CJRANGE) {
-                        Serial.println(F("Cold Junction Range Fault"));
-                        display.println(F("Cold Junction Range Fault"));
-                }
-                if (g_fault & MAX31856_FAULT_TCRANGE) {
-                        Serial.println(F("Thermocouple Range Fault"));
-                        display.println(F("Thermocouple Range Fault"));
-                }
-                if (g_fault & MAX31856_FAULT_CJHIGH) {
-                        Serial.println(F("Cold Junction High Fault"));
-                        display.println(F("Cold Junction High Fault"));
-                }
-                if (g_fault & MAX31856_FAULT_CJLOW) {
-                        Serial.println(F("Cold Junction Low Fault"));
-                        display.println(F("Cold Junction Low Fault"));
-                }
-                if (g_fault & MAX31856_FAULT_TCHIGH) {
-                        Serial.println(F("Thermocouple High Fault"));
-                        display.println(F("Thermocouple High Fault"));
-                }
-                if (g_fault & MAX31856_FAULT_TCLOW) {
-                        Serial.println(F("Thermocouple Low Fault"));
-                        display.println(F("Thermocouple Low Fault"));
-                }
-                if (g_fault & MAX31856_FAULT_OVUV) {
-                        Serial.println(F("Over/Under Voltage Fault"));
-                        display.println(F("Over/Under Voltage Fault"));
-                }
-                if (g_fault & MAX31856_FAULT_OPEN) {
-                        Serial.println(F("Thermocouple Open Fault"));
-                        display.println(F("Thermocouple Open Fault"));
-                }
-                display.display();
-                g_fault = max.readFault();
-                Serial.println(F("In Fault state. Fault is reported as: "));
-                Serial.println(g_fault);
-                if (!g_fault) {
-                        theState = idle;
-                }
-                break;
-        case pause: ///////////////////////////// PAUSED
-                checkPauseButton();
-                checkStartStopButton();
-                update_temps();
-                update_PID_and_set_output();
-                update_display();
+	case pause: ///////////////////////////// PAUSED
+		checkPauseButton();
+		checkStartStopButton();
+		update_temps();
+		update_PID_and_set_output();
+		update_display();
 
-                break;
-        }
+		break;
+	}
 
-        delay(10);
+	delay(10);
 }

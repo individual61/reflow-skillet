@@ -19,13 +19,5 @@ void update_temps() {
                         theState = fault;
                         Serial.println(F("In update temps, setting fault"));
                 }
-
-
-
-
-
         }
-
-
-
 }

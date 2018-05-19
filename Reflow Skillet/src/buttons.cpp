@@ -10,57 +10,61 @@ unsigned long timeNowButton2 = 0;
 unsigned long lastTimePressedButton1 = 0;
 unsigned long lastTimePressedButton2 = 0;
 
-void startStopBtnPressAction(void) {
-  Serial.println(F("Start/Stop button pressed."));
-  if (theState == idle) {
-    Serial.println(F("Switching from idle to running."));
-    theState = running;
-    init_profile();
-    return;
-  }
-  if (theState == running) {
-    Serial.println(F("Switching from running to idle."));
-    // do transition to idle here ()
-    theState = idle;
-    g_tset = 0.0;
-        g_PID_setpoint = g_tset;
-    g_heating = 0;
-      digitalWrite(OUTPUT_PIN, LOW);
-    return;
-  }
+void startStopBtnPressAction(void)
+{
+	Serial.println(F("Start/Stop button pressed."));
+	if (theState == idle) {
+		Serial.println(F("Switching from idle to running."));
+		theState = running;
+		init_profile();
+		return;
+	}
+	if (theState == running) {
+		Serial.println(F("Switching from running to idle."));
+		// do transition to idle here ()
+		theState = idle;
+		g_tset = 0.0;
+		g_PID_setpoint = g_tset;
+		g_heating = 0;
+		digitalWrite(OUTPUT_PIN, LOW);
+		return;
+	}
 }
 
-void pauseBtnPressAction(void) {
-  Serial.println(F("Pause button pressed."));
-  if (theState == pause) {
-    Serial.println(F("Switching from paused to running."));
-    theState = running; // remember to reset integrator timer
-  } else if (theState == running) {
-    Serial.println(F("Switching from running to paused."));
-    theState = pause; // store variables i.e. do not reset them
-  }
+void pauseBtnPressAction(void)
+{
+	Serial.println(F("Pause button pressed."));
+	if (theState == pause) {
+		Serial.println(F("Switching from paused to running."));
+		theState = running; // remember to reset integrator timer
+	} else if (theState == running) {
+		Serial.println(F("Switching from running to paused."));
+		theState = pause; // store variables i.e. do not reset them
+	}
 }
 
-void checkStartStopButton(void) {
-  bool buttonState = digitalRead(STARTSTOP_BTN);
-  if (buttonState == 0) // pressed
-  {
-    timeNowButton1 = millis();
-    if (timeNowButton1 - lastTimePressedButton1 > DEBOUNCEDELAY) {
-      startStopBtnPressAction();
-      lastTimePressedButton1 = timeNowButton1;
-    }
-  }
+void checkStartStopButton(void)
+{
+	bool buttonState = digitalRead(STARTSTOP_BTN);
+	if (buttonState == 0) // pressed
+	{
+		timeNowButton1 = millis();
+		if (timeNowButton1 - lastTimePressedButton1 > DEBOUNCEDELAY) {
+			startStopBtnPressAction();
+			lastTimePressedButton1 = timeNowButton1;
+		}
+	}
 }
 
-void checkPauseButton(void) {
-  bool buttonState = digitalRead(PAUSE_BTN);
-  if (buttonState == 0) // pressed
-  {
-    timeNowButton2 = millis();
-    if (timeNowButton2 - lastTimePressedButton2 > DEBOUNCEDELAY) {
-      pauseBtnPressAction();
-      lastTimePressedButton2 = timeNowButton2;
-    }
-  }
+void checkPauseButton(void)
+{
+	bool buttonState = digitalRead(PAUSE_BTN);
+	if (buttonState == 0) // pressed
+	{
+		timeNowButton2 = millis();
+		if (timeNowButton2 - lastTimePressedButton2 > DEBOUNCEDELAY) {
+			pauseBtnPressAction();
+			lastTimePressedButton2 = timeNowButton2;
+		}
+	}
 }

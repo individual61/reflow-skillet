@@ -33,18 +33,13 @@ void update_display() {
   }
 
   display.print(F("Time remaining: "));
-
   if ((theState == running) || (theState == pause)) {
-
   display.print( calculate_total_time_remaining(), 1);
   display.println(F(" s"));
   }
   else if (theState == idle) {
     display.println(F("--"));
   }
-
-
-
 
   // fake temp
 //  display.println(g_fake_temp);
@@ -86,4 +81,41 @@ void update_display() {
   }
 
   display.display();
+}
+
+void display_fault(void)
+{
+if (g_fault & MAX31856_FAULT_CJRANGE) {
+  Serial.println(F("Cold Junction Range Fault"));
+  display.println(F("Cold Junction Range Fault"));
+}
+if (g_fault & MAX31856_FAULT_TCRANGE) {
+  Serial.println(F("Thermocouple Range Fault"));
+  display.println(F("Thermocouple Range Fault"));
+}
+if (g_fault & MAX31856_FAULT_CJHIGH) {
+  Serial.println(F("Cold Junction High Fault"));
+  display.println(F("Cold Junction High Fault"));
+}
+if (g_fault & MAX31856_FAULT_CJLOW) {
+  Serial.println(F("Cold Junction Low Fault"));
+  display.println(F("Cold Junction Low Fault"));
+}
+if (g_fault & MAX31856_FAULT_TCHIGH) {
+  Serial.println(F("Thermocouple High Fault"));
+  display.println(F("Thermocouple High Fault"));
+}
+if (g_fault & MAX31856_FAULT_TCLOW) {
+  Serial.println(F("Thermocouple Low Fault"));
+  display.println(F("Thermocouple Low Fault"));
+}
+if (g_fault & MAX31856_FAULT_OVUV) {
+  Serial.println(F("Over/Under Voltage Fault"));
+  display.println(F("Over/Under Voltage Fault"));
+}
+if (g_fault & MAX31856_FAULT_OPEN) {
+  Serial.println(F("Thermocouple Open Fault"));
+  display.println(F("Thermocouple Open Fault"));
+}
+display.display();
 }

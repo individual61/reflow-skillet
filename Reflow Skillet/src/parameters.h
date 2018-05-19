@@ -68,6 +68,10 @@
 #define WINDOWSIZEDIV100 30 // window size divided by 100
 #define PID_SAMPLE_TIME 200 // how often PID loop is updated
 
+
+
+/////////////////// Profile
+#define INITIAL_PROFILE_TEMP 15
 //////////////////////// GLOBALS
 // Display globals
 extern Adafruit_SSD1306 display;
@@ -100,7 +104,9 @@ extern double g_t_ramp_start;
 extern double g_t_ramp_end;
 
 #define NUMBER_OF_PROFILE_STEPS 5
-extern uint32_t profile[2 * NUMBER_OF_PROFILE_STEPS];
+extern uint32_t profile_times[NUMBER_OF_PROFILE_STEPS];
+extern double profile_temps[NUMBER_OF_PROFILE_STEPS];
+
 
 // PID globalS
 extern PID myPID;
