@@ -13,7 +13,7 @@ void init_profile(void)
 void advance_to_next_step(void)
 {
 	g_currentStep++;
-	if (g_currentStep == NUMBER_OF_PROFILE_STEPS - 1)
+	if (g_currentStep == NUMBER_OF_PROFILE_STEPS)
 	{
 		theState = idle;
 		g_currentStep = 0;
