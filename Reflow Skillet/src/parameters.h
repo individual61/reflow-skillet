@@ -61,7 +61,7 @@
 
 /////////////////// PID
 #define PID_OUTPUTLIMIT 100.0
-#define KP (100.0 / 40.0)
+#define KP (100.0 / 30.0)   // denominator is temp in deg C that will elicit 100% output
 #define KI 0.0
 #define KD 0.0
 #define WINDOWSIZE 3000     // minimum SSR cycle period in ms
@@ -95,6 +95,9 @@ extern bool g_heartbeat;
 extern uint8_t g_currentStep;
 extern uint32_t g_timeStepStart;
 extern uint32_t g_timeStepElapsed;
+extern uint32_t g_step_duration;
+extern double g_t_ramp_start;
+extern double g_t_ramp_end;
 
 #define NUMBER_OF_PROFILE_STEPS 5
 extern uint32_t profile[2 * NUMBER_OF_PROFILE_STEPS];

@@ -34,19 +34,9 @@ void update_display() {
 
   display.print(F("Time remaining: "));
 
-uint16_t accum = 0;
   if ((theState == running) || (theState == pause)) {
 
-    for(int i = g_currentStep; i < NUMBER_OF_PROFILE_STEPS; i++)
-    {
-      accum = accum + profile[2 * i];
-    }
-  // Serial.print(F("accum after loop: "));
-  //    Serial.print(accum);
-  accum = accum - (g_timeStepElapsed / 1000.0);
-  //    Serial.print(F("\t minus current step:"));
-  //    Serial.println(accum);
-  display.print(accum, 1);
+  display.print( calculate_total_time_remaining(), 1);
   display.println(F(" s"));
   }
   else if (theState == idle) {

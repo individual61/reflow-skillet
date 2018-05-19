@@ -14,14 +14,8 @@ void startStopBtnPressAction(void) {
   Serial.println(F("Start/Stop button pressed."));
   if (theState == idle) {
     Serial.println(F("Switching from idle to running."));
-    g_timeStepStart = millis();
-
-    g_currentStep = 0;
-    g_tset = (float)(profile[2 * g_currentStep + 1]);
-    g_PID_setpoint = g_tset;
-
     theState = running;
-
+    init_profile();
     return;
   }
   if (theState == running) {

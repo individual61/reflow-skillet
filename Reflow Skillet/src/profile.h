@@ -2,5 +2,9 @@
 #define PROFILE_H
 
 void advance_to_next_step(void);
+void init_profile(void);
 void reset_profile(void);
+uint32_t calculate_total_time_remaining(void);
+void calculate_tset_from_ramp(void);
+
 #endif
