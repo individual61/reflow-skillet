@@ -12,7 +12,7 @@
 #include "WProgram.h"
 #endif
 
-#include <PID_v1.h>
+#include "parameters.h"
 
 /*Constructor (...)*********************************************************
  *    The parameters specified here are those for for which we can't set up
@@ -225,3 +225,5 @@ double PID::GetKi() { return dispKi; }
 double PID::GetKd() { return dispKd; }
 int PID::GetMode() { return inAuto ? AUTOMATIC : MANUAL; }
 int PID::GetDirection() { return controllerDirection; }
+
+void PID::reset() { outputSum = 0.0;}

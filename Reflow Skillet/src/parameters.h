@@ -10,7 +10,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Arduino.h>
-#include <PID_V1.h>
+#include "PID_V1_modified.h"
 #include <avr/pgmspace.h>
 
 ///////////////////
@@ -62,7 +62,7 @@
 /////////////////// PID
 #define PID_OUTPUTLIMIT 100.0
 #define KP (100.0 / 40.0)   // denominator is temp in deg C that will elicit 100% output
-#define KI 0.0
+#define KI 0.03
 #define KD 0.0
 #define WINDOWSIZE 3000     // minimum SSR cycle period in ms
 #define WINDOWSIZEDIV100 30 // window size divided by 100
@@ -103,7 +103,7 @@ extern uint32_t g_step_duration;
 extern double g_t_ramp_start;
 extern double g_t_ramp_end;
 
-#define NUMBER_OF_PROFILE_STEPS 5
+#define NUMBER_OF_PROFILE_STEPS 6
 extern double profile_times[NUMBER_OF_PROFILE_STEPS];
 extern double profile_temps[NUMBER_OF_PROFILE_STEPS];
 

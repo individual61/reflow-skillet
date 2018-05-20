@@ -34,6 +34,27 @@ double g_t_ramp_end = 0.0;
 
 double profile_times[] =
 {
+	150.0, // 0
+	175.0, // 1
+	217.0, // 2
+	249.0, // 3
+	217.0, // 4
+	15.0
+};
+
+double profile_temps[] =
+{
+	90, // 0, to 150
+	90, // 1, to 175
+	30, // 2, to 217
+	30, // 3, to 249
+	30, // 4, to 217
+	90 // 5 to 15
+};
+
+/*
+double profile_times[] =
+{
 	1.0, // 0
 	2000.0, // 1
 	3.0, // 2
@@ -49,6 +70,7 @@ double profile_temps[] =
 	100, // 3
 	15 // 4
 };
+*/
 
 // State Machine globals
 State_enum theState = idle;
@@ -146,7 +168,10 @@ void loop()
 		Serial.print(g_tset);
 		//	Serial.print(F("\t g_thtemp"));
 		Serial.print(F("\t"));
-		Serial.println(g_thtemp);
+		Serial.print(g_thtemp);
+		Serial.print(F("\t"));
+		Serial.println(g_PID_output);
+
 		if (g_timeStepElapsed > (1000 * profile_times[g_currentStep]))
 		{
 			advance_to_next_step();

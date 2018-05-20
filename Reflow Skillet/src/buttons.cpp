@@ -17,6 +17,7 @@ void startStopBtnPressAction(void)
 		Serial.println(F("Switching from idle to running."));
 		theState = running;
 		init_profile();
+		myPID.reset();
 		return;
 	}
 	if (theState == running) {
