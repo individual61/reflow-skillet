@@ -61,7 +61,7 @@
 
 /////////////////// PID
 #define PID_OUTPUTLIMIT 100.0
-#define KP (100.0 / 30.0)   // denominator is temp in deg C that will elicit 100% output
+#define KP (100.0 / 40.0)   // denominator is temp in deg C that will elicit 100% output
 #define KI 0.0
 #define KD 0.0
 #define WINDOWSIZE 3000     // minimum SSR cycle period in ms

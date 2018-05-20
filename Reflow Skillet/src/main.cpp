@@ -35,7 +35,7 @@ double g_t_ramp_end = 0.0;
 double profile_times[] =
 {
 	1.0, // 0
-	2.0, // 1
+	2000.0, // 1
 	3.0, // 2
 	4.0, // 3
 	5.0 // 4
@@ -43,11 +43,11 @@ double profile_times[] =
 
 double profile_temps[] =
 {
-	50, // 0
+	100, // 0
 	100, // 1
-	50, // 2
+	100, // 2
 	100, // 3
-	50 // 4
+	15 // 4
 };
 
 // State Machine globals
@@ -119,6 +119,8 @@ void loop()
 		checkStartStopButton();
 		update_temps();
 		update_display();
+		g_heating = 0;
+		digitalWrite(OUTPUT_PIN, LOW);
 		break;
 
 	case running: ///////////////////////////// RUNNING
@@ -138,7 +140,7 @@ void loop()
 //		Serial.print(F("\tprofile_times[g_currentStep] "));
 //		Serial.print(profile_times[g_currentStep]);
 //		Serial.print(F("\tg_timeStepElapsed/1000.0 "));
-		Serial.print(g_timeStepElapsed/1000.0);
+//		Serial.print(g_timeStepElapsed/1000.0);
 //		Serial.print(F("\tg_tset "));
 		Serial.print(F("\t"));
 		Serial.print(g_tset);

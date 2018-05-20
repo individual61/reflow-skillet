@@ -17,8 +17,9 @@ void advance_to_next_step(void)
 	{
 		theState = idle;
 		g_currentStep = 0;
-		theState = idle;
 		Serial.println(F("Program completed."));
+		g_heating = 0;
+
 		return;
 	} else {
 		g_timeStepStart = millis();
