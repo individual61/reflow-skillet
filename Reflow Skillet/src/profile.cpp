@@ -17,7 +17,7 @@ void advance_to_next_step(void)
 	{
 		theState = idle;
 		g_currentStep = 0;
-		Serial.println(F("Program completed."));
+	//	Serial.println(F("Program completed."));
 		g_heating = 0;
 
 		return;
@@ -29,10 +29,10 @@ void advance_to_next_step(void)
 		g_step_duration = profile_times[g_currentStep];
 
 
-		Serial.print(F("Starting step "));
-		Serial.print(g_currentStep);
-		Serial.print(F(" of "));
-		Serial.println(NUMBER_OF_PROFILE_STEPS);
+	//	Serial.print(F("Starting step "));
+	//	Serial.print(g_currentStep);
+	//	Serial.print(F(" of "));
+	//	Serial.println(NUMBER_OF_PROFILE_STEPS);
 		return;
 	}
 }

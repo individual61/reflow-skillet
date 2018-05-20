@@ -34,43 +34,45 @@ double g_t_ramp_end = 0.0;
 
 double profile_times[] =
 {
+	210, // 0, to 150
+	120, // 1, to 175
+	100, // 2, to 217
+	80, // 3, to 235
+	30, // 4, to 235
+	60, // 5, to 217
+	180 // 6 to 15
+};
+
+double profile_temps[] =
+{
 	150.0, // 0
 	175.0, // 1
 	217.0, // 2
-	249.0, // 3
-	217.0, // 4
+	235.0, // 3  // paste says 249, but APA102C says 235
+	235.0,         // 4
+	217.0, // 5
 	15.0
 };
 
-double profile_temps[] =
-{
-	90, // 0, to 150
-	90, // 1, to 175
-	30, // 2, to 217
-	30, // 3, to 249
-	30, // 4, to 217
-	90 // 5 to 15
-};
-
 /*
-double profile_times[] =
-{
-	1.0, // 0
-	2000.0, // 1
-	3.0, // 2
-	4.0, // 3
-	5.0 // 4
-};
+   double profile_times[] =
+   {
+        1.0, // 0
+        2000.0, // 1
+        3.0, // 2
+        4.0, // 3
+        5.0 // 4
+   };
 
-double profile_temps[] =
-{
-	100, // 0
-	100, // 1
-	100, // 2
-	100, // 3
-	15 // 4
-};
-*/
+   double profile_temps[] =
+   {
+        100, // 0
+        100, // 1
+        100, // 2
+        100, // 3
+        15 // 4
+   };
+ */
 
 // State Machine globals
 State_enum theState = idle;
