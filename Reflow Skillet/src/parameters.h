@@ -51,8 +51,11 @@
 #define OLED_RESET 5
 
 // Start OLED preamble
-#define LOGO16_GLCD_HEIGHT 16
-#define LOGO16_GLCD_WIDTH 16
+//#define LOGO16_GLCD_HEIGHT 16
+//#define LOGO16_GLCD_WIDTH 16
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
 //#if (SSD1306_LCDHEIGHT != 64)
 //#error("Height incorrect, please fix Adafruit_SSD1306.h!");

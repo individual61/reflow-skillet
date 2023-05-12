@@ -12,16 +12,16 @@ unsigned long lastTimePressedButton2 = 0;
 
 void startStopBtnPressAction(void)
 {
-	Serial.println(F("Start/Stop button pressed."));
+	Serial.println(F("# Start/Stop button pressed."));
 	if (theState == idle) {
-//		Serial.println(F("Switching from idle to running."));
+//		Serial.println(F("# Switching from idle to running."));
 		theState = running;
 		init_profile();
 		myPID.reset();
 		return;
 	}
 	if (theState == running) {
-//		Serial.println(F("Switching from running to idle."));
+//		Serial.println(F("# Switching from running to idle."));
 		// do transition to idle here ()
 		theState = idle;
 		g_tset = 0.0;
@@ -34,12 +34,12 @@ void startStopBtnPressAction(void)
 
 void pauseBtnPressAction(void)
 {
-//	Serial.println(F("Pause button pressed."));
+//	Serial.println(F("# Pause button pressed."));
 	if (theState == pause) {
-//		Serial.println(F("Switching from paused to running."));
+//		Serial.println(F("# Switching from paused to running."));
 		theState = running; // remember to reset integrator timer
 	} else if (theState == running) {
-//		Serial.println(F("Switching from running to paused."));
+//		Serial.println(F("# Switching from running to paused."));
 		theState = pause; // store variables i.e. do not reset them
 	}
 }

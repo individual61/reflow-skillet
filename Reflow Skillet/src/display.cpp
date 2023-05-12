@@ -1,18 +1,21 @@
 #include "parameters.h"
 
-#if (SSD1306_LCDHEIGHT != 64)
-#error("Height incorrect, please fix Adafruit_SSD1306.h!");
-#endif
+//#define SSD1306_128_64 1
+//#if (SSD1306_LCDHEIGHT != 64)
+//#error("Height incorrect, please fix Adafruit_SSD1306.h!");
+//#endif
+
+#define TEST 0
 
 void update_display() {
-
   display.clearDisplay();
+
 
   // Tact display
   display.setCursor(0, 0);
   display.print(F("Tact: "));
   display.println(g_thtemp, 1);
-
+#if TEST == 0
   // Tset display
   display.print(F("Tset: "));
   if ((theState == running) || (theState == pause)) {
@@ -31,6 +34,7 @@ void update_display() {
   } else if (theState == idle) {
     display.println(F("--"));
   }
+
 
   display.print(F("Time remaining: "));
   if ((theState == running) || (theState == pause)) {
@@ -79,38 +83,38 @@ void update_display() {
   if (g_heartbeat) {
     display.drawRect(126, 62, 2, 2, WHITE);
   }
-
+#endif
   display.display();
 }
 
 void display_fault(void)
 {
 if (g_fault & MAX31856_FAULT_CJRANGE) {
-  Serial.println(F("Cold Junction Range Fault"));
+  Serial.println(F("# Cold Junction Range Fault"));
   display.println(F("Cold Junction Range Fault"));
 }
 if (g_fault & MAX31856_FAULT_TCRANGE) {
-  Serial.println(F("Thermocouple Range Fault"));
+  Serial.println(F("# Thermocouple Range Fault"));
   display.println(F("Thermocouple Range Fault"));
 }
 if (g_fault & MAX31856_FAULT_CJHIGH) {
-  Serial.println(F("Cold Junction High Fault"));
+  Serial.println(F("# Cold Junction High Fault"));
   display.println(F("Cold Junction High Fault"));
 }
 if (g_fault & MAX31856_FAULT_CJLOW) {
-  Serial.println(F("Cold Junction Low Fault"));
+  Serial.println(F("# Cold Junction Low Fault"));
   display.println(F("Cold Junction Low Fault"));
 }
 if (g_fault & MAX31856_FAULT_TCHIGH) {
-  Serial.println(F("Thermocouple High Fault"));
+  Serial.println(F("# Thermocouple High Fault"));
   display.println(F("Thermocouple High Fault"));
 }
 if (g_fault & MAX31856_FAULT_TCLOW) {
-  Serial.println(F("Thermocouple Low Fault"));
+  Serial.println(F("# Thermocouple Low Fault"));
   display.println(F("Thermocouple Low Fault"));
 }
 if (g_fault & MAX31856_FAULT_OVUV) {
-  Serial.println(F("Over/Under Voltage Fault"));
+  Serial.println(F("# Over/Under Voltage Fault"));
   display.println(F("Over/Under Voltage Fault"));
 }
 if (g_fault & MAX31856_FAULT_OPEN) {

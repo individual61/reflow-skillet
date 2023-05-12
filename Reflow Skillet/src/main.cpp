@@ -7,11 +7,14 @@
 // library header file must be edited as parameters
 // https://learn.adafruit.com/monochrome-oled-breakouts/arduino-library-and-examples
 
+// Plot with
+// https://hackaday.io/project/5334-serialplot-realtime-plotting-software
+
 //////////////////////// GLOBALS
 
 // Display globals
-Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-
+// Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 // Thermocouple globals
 Adafruit_MAX31856 max =
 	Adafruit_MAX31856(MAX31856_CS, MAX31856_MOSI, MAX31856_MISO, MAX31856_CLK);
@@ -33,44 +36,43 @@ double g_t_ramp_start = 0.0;
 double g_t_ramp_end = 0.0;
 
 double profile_times[] =
-{
-	210, // 0, to 150
-	120, // 1, to 175
-	100, // 2, to 217
-	80, // 3, to 235
-	30, // 4, to 235
-	60, // 5, to 217
-	180 // 6 to 15
+	{
+		210, // 0, to 150
+		120, // 1, to 175
+		100, // 2, to 217
+		80,	 // 3, to 235
+		30,	 // 4, to 235
+		60,	 // 5, to 217
+		180	 // 6 to 15
 };
 
 double profile_temps[] =
-{
-	150.0, // 0
-	175.0, // 1
-	217.0, // 2
-	235.0, // 3  // paste says 249, but APA102C says 235
-	235.0,         // 4
-	217.0, // 5
-	15.0
-};
+	{
+		150.0, // 0
+		175.0, // 1
+		217.0, // 2
+		235.0, // 3  // paste says 249, but APA102C says 235
+		235.0, // 4
+		217.0, // 5
+		15.0};
 
 /*
    double profile_times[] =
    {
-        1.0, // 0
-        2000.0, // 1
-        3.0, // 2
-        4.0, // 3
-        5.0 // 4
+		1.0, // 0
+		2000.0, // 1
+		3.0, // 2
+		4.0, // 3
+		5.0 // 4
    };
 
    double profile_temps[] =
    {
-        100, // 0
-        100, // 1
-        100, // 2
-        100, // 3
-        15 // 4
+		100, // 0
+		100, // 1
+		100, // 2
+		100, // 3
+		15 // 4
    };
  */
 
@@ -87,7 +89,7 @@ uint32_t g_windowStartTime = 0;
 
 double g_PID_setpoint = 0; // from profile
 double g_PID_output = 0;   // control relay ON time
-double g_PID_input = 0;    // measured temp
+double g_PID_input = 0;	   // measured temp
 
 PID myPID(&g_PID_input, &g_PID_output, &g_PID_setpoint, KP, KI, KD, DIRECT);
 
@@ -104,21 +106,29 @@ void setup()
 	// Thermocouple stuff
 	max.begin();
 	max.setThermocoupleType(MAX31856_TCTYPE_K);
-	max.config();
+	//max.config();
 	update_temps();
 
 	// Profile stuff
 	g_currentStep = 0;
 
 	// OLED stuff
-	display.begin(SSD1306_SWITCHCAPVCC);
+	// display.begin(SSD1306_SWITCHCAPVCC);
+	// SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+	if (!display.begin(SSD1306_SWITCHCAPVCC))
+	{
+		Serial.println(F("SSD1306 allocation failed"));
+		for (;;)
+			; // Don't proceed, loop forever
+	}
 
+	display.clearDisplay();
+	display.display();
 	display.setTextSize(1);
 	display.setTextColor(WHITE);
 	display.setCursor(0, 0);
 	display.clearDisplay();
 	display.display();
-
 	// PID stuff
 	g_heating = 0;
 	g_windowStartTime = millis();
@@ -131,18 +141,20 @@ void setup()
 	digitalWrite(OUTPUT_PIN, LOW);
 }
 
-
 void loop()
 {
 	g_heartbeat = !g_heartbeat;
 
-	switch (theState) {
+	switch (theState)
+	{
 
 	case idle: ///////////////////////////// IDLE
 		checkPauseButton();
 		checkStartStopButton();
+				update_display();
+
+		delay(30);
 		update_temps();
-		update_display();
 		g_heating = 0;
 		digitalWrite(OUTPUT_PIN, LOW);
 		break;
@@ -153,20 +165,20 @@ void loop()
 		update_temps();
 		g_timeStepElapsed = millis() - g_timeStepStart;
 
-		calculate_tset_from_ramp(g_t_ramp_start, g_t_ramp_end, profile_times[g_currentStep], (double)(g_timeStepElapsed/1000.0)); // also sets g_PID_setpoint
+		calculate_tset_from_ramp(g_t_ramp_start, g_t_ramp_end, profile_times[g_currentStep], (double)(g_timeStepElapsed / 1000.0)); // also sets g_PID_setpoint
 		update_PID_and_set_output();
 		update_display();
 
 		//	Serial.print(F("g_t_ramp_start "));
 		//	Serial.print(g_t_ramp_start);
-//		Serial.print(F("\tg_t_ramp_end "));
-//		Serial.print(g_t_ramp_end);
-//		Serial.print(F("\tprofile_times[g_currentStep] "));
-//		Serial.print(profile_times[g_currentStep]);
-//		Serial.print(F("\tg_timeStepElapsed/1000.0 "));
-//		Serial.print(g_timeStepElapsed/1000.0);
-//		Serial.print(F("\tg_tset "));
-		Serial.print(F("\t"));
+		//		Serial.print(F("\tg_t_ramp_end "));
+		//		Serial.print(g_t_ramp_end);
+		//		Serial.print(F("\tprofile_times[g_currentStep] "));
+		//		Serial.print(profile_times[g_currentStep]);
+		//		Serial.print(F("\tg_timeStepElapsed/1000.0 "));
+		//		Serial.print(g_timeStepElapsed/1000.0);
+		//		Serial.print(F("\tg_tset "));
+		//		Serial.print(F("\t"));
 		Serial.print(g_tset);
 		//	Serial.print(F("\t g_thtemp"));
 		Serial.print(F("\t"));
@@ -190,9 +202,10 @@ void loop()
 		display_fault();
 
 		g_fault = max.readFault();
-		Serial.println(F("In Fault state. Fault is reported as: "));
+		Serial.println(F("# In Fault state. Fault is reported as: "));
 		Serial.println(g_fault);
-		if (!g_fault) {
+		if (!g_fault)
+		{
 			theState = idle;
 		}
 		break;
@@ -207,5 +220,5 @@ void loop()
 		break;
 	}
 
-	delay(10);
+	delay(100);
 }
