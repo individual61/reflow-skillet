@@ -13,11 +13,21 @@
 //////////////////////// GLOBALS
 
 // Display globals
-// Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+
+// This is for software SPI
+// Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+
+// We want hardware SPI
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_DC, OLED_RESET, OLED_CS);
+
 // Thermocouple globals
-Adafruit_MAX31856 max =
-	Adafruit_MAX31856(MAX31856_CS, MAX31856_MOSI, MAX31856_MISO, MAX31856_CLK);
+
+// This is software SPI
+// Adafruit_MAX31856 max = Adafruit_MAX31856(MAX31856_CS, MAX31856_MOSI, MAX31856_MISO, MAX31856_CLK);
+
+// We want hardware SPI (to use hardware SPI, just pass in the CS pin)
+Adafruit_MAX31856 max = Adafruit_MAX31856(MAX31856_CS);
+
 float g_coldtemp = 0.0;
 float g_thtemp = 0.0;
 float g_tset = 0.0;
@@ -35,6 +45,28 @@ uint32_t g_step_duration = 0;
 double g_t_ramp_start = 0.0;
 double g_t_ramp_end = 0.0;
 
+double profile_times[] =
+	{
+		210, // 0, to 120
+		120, // 1, to 160
+		100, // 2, to 210
+		80,	 // 3, to 210
+		30,	 // 4, to 170
+		60,	 // 5, to 100
+		180	 // 6 to 15
+};
+
+double profile_temps[] =
+	{
+		120.0, // 0
+		160.0, // 1
+		210.0, // 2
+		210.0, // 3  // paste says 249, but APA102C says 235
+		170.0, // 4
+		100.0, // 5
+		15.0};
+
+/* As found from 2018. Probably good for APA102C. 
 double profile_times[] =
 	{
 		210, // 0, to 150
@@ -55,6 +87,8 @@ double profile_temps[] =
 		235.0, // 4
 		217.0, // 5
 		15.0};
+*/
+
 
 /*
    double profile_times[] =
@@ -104,8 +138,14 @@ void setup()
 	g_fault = 0;
 
 	// Thermocouple stuff
-	max.begin();
+	if (!max.begin())
+	{
+		Serial.println("# Could not initialize thermocouple.");
+	}
+	Serial.println("# MAX31856 initialized successfully.");
+
 	max.setThermocoupleType(MAX31856_TCTYPE_K);
+	max.setConversionMode(MAX31856_CONTINUOUS);
 	//max.config();
 	update_temps();
 
@@ -151,10 +191,9 @@ void loop()
 	case idle: ///////////////////////////// IDLE
 		checkPauseButton();
 		checkStartStopButton();
-				update_display();
-
-		delay(30);
 		update_temps();
+		delay(10);
+		update_display();
 		g_heating = 0;
 		digitalWrite(OUTPUT_PIN, LOW);
 		break;
@@ -220,5 +259,5 @@ void loop()
 		break;
 	}
 
-	delay(100);
+	delay(10);
 }

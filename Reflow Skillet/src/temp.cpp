@@ -7,23 +7,22 @@ void update_temps() {
         { // Only poll temp if > 90 ms interval
                 g_previous_temp_read_time = time_now;
 /////
-                g_fault = max.readFault();
-                Serial.print(g_fault);
-                Serial.print("\t");
+                //g_fault = max.readFault();
+                g_fault = 0;
                 if (!g_fault) {
 
                         g_thtemp = max.readThermocoupleTemperature();
                         g_coldtemp = max.readCJTemperature();
-                        Serial.print(g_thtemp);
-                        Serial.print("\t");
-                        Serial.println(g_coldtemp);
+                        //Serial.print(g_thtemp);
+                        //Serial.print("\t");
+                        //Serial.println(g_coldtemp);
                         
                 //        g_fake_temp = analogRead(0);
                 //        g_fake_temp = map(g_fake_temp, 0, 1023, 95, 5);
 
                 } else {
                         theState = fault;
-                        Serial.println(F("In update temps, setting fault"));
+                        Serial.println(F("# In update temps, setting fault"));
                 }
         }
 }

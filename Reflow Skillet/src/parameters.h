@@ -1,7 +1,8 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include "Adafruit_MAX31856_modified.h"
+//#include "Adafruit_MAX31856_modified.h"
+#include <Adafruit_MAX31856.h>
 #include "buttons.h"
 #include "display.h"
 #include "pid.h"
@@ -33,7 +34,7 @@
 
 /////////////////// Thermocouple
 // Use software SPI: CS, DI, DO, CLK
-#define MAX31856_CS 10
+#define MAX31856_CS 17 // 18 //10
 #define MAX31856_MOSI 11
 #define MAX31856_MISO 12
 #define MAX31856_CLK 13

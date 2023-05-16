@@ -28,7 +28,7 @@
 
 static SPISettings max31856_spisettings =
     SPISettings(500000, MSBFIRST, SPI_MODE0);
-
+    
 // Software (bitbang) SPI
 Adafruit_MAX31856::Adafruit_MAX31856(int8_t spi_cs, int8_t spi_mosi,
                                      int8_t spi_miso, int8_t spi_clk) {
