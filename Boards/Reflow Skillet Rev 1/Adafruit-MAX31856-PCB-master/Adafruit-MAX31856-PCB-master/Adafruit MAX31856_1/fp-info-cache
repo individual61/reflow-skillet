@@ -1,81 +1,102 @@
-21768150832934676
-Adafruit_1.3_128x64_OLED_Original
-1X08_ROUND_70
+21773208550324125
+Adafruit MAX31856
+1X09_ROUND_70
 
 
 0
-8
-8
-Adafruit_1.3_128x64_OLED_Original
-0805
-0805 (2012 Metric)
+9
+9
+Adafruit MAX31856
+0805-NO
+
 
 0
 2
 2
-Adafruit_1.3_128x64_OLED_Original
-ADAFRUIT_2.5MM
+Adafruit MAX31856
+0805_10MGAP
+
+
+0
+2
+2
+Adafruit MAX31856
+ADAFRUIT_3.5MM
 
 
 0
 0
 0
-Adafruit_1.3_128x64_OLED_Original
+Adafruit MAX31856
+ADAFRUIT_TEXT_20MM
+
+
+0
+0
+0
+Adafruit MAX31856
 FIDUCIAL_1MM
 
 
 0
 1
 1
-Adafruit_1.3_128x64_OLED_Original
-LOGIC_5VREADY_5MM
-
-
-0
-0
-0
-Adafruit_1.3_128x64_OLED_Original
+Adafruit MAX31856
 MOUNTINGHOLE_2.5_PLATED
 
 
 0
 1
 1
-Adafruit_1.3_128x64_OLED_Original
+Adafruit MAX31856
+PCBFEAT-REV-040
+<b>Revision Level Field</b> - 40 mil<p>{return}Set version with global board attribute '>REV'
+
+0
+0
+0
+Adafruit MAX31856
 SOD-323
 <b>SOD323</b> (2.5x1.2mm)
 
 0
 2
 2
-Adafruit_1.3_128x64_OLED_Original
-SOLDERJUMPER_REFLOW_NOPASTE
-
-
-0
-2
-2
-Adafruit_1.3_128x64_OLED_Original
+Adafruit MAX31856
 SOT23-5
 <b>Small Outline Transistor</b> - 5 Pin
 
 0
 5
 5
-Adafruit_1.3_128x64_OLED_Original
-SOT23-WIDE
+Adafruit MAX31856
+SYMBOL_MINUS
+<b>ICON</b><p> Minus Symbol
+
+0
+0
+0
+Adafruit MAX31856
+SYMBOL_PLUS
+<b>ICON</b><p> Plus Sign Symbol
+
+0
+0
+0
+Adafruit MAX31856
+TERMBLOCK_1X2-3.5MM
 
 
 0
-3
-3
-Adafruit_1.3_128x64_OLED_Original
-UG-2864HSWEG01_1.3_WRAPAROUND
-
+2
+2
+Adafruit MAX31856
+TSSOP14
+<b>Thin Shrink Small Outline Plastic 14</b><p>
 
 0
-30
-30
+14
+14
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -63431,7 +63452,7 @@ Adafruit 1.3 128 x 64 OLED Original
 
 
 0
-8
+10
 8
 MyBoards
 Adafruit 4x Bi-Directional Level Shifter BSS138
